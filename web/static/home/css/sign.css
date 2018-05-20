@@ -1,0 +1,30 @@
+body{
+	background-color: #F0F0F0;
+}
+.topbar{
+	height:auto;
+	/*margin-bottom: 50px;*/
+}
+.flooter{
+	position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.signform .wrap{
+	/*height: 431px;*/
+	margin-top: 80px;
+	background-color: white;
+	border-radius: 5px;
+	padding: 15px;
+}
+
+.signform .wrap .form{
+	padding: 18px;
+}
+.form .form-l{
+	padding-right:15px;
+}
+.form .form-r{
+	border-left: 1px solid #f2f2f2;
+	padding-left:15px;
+}

@@ -1,0 +1,23 @@
+.topbar{
+	height:auto;
+	/*margin-bottom: 50px;*/
+}
+#pics{
+	position: relative;
+	background-color: pink;
+	
+}
+#pics .box{
+	padding: 15px 0 0 15px;
+	float: left;
+}
+#pics .box .pic{
+	padding: 8px;
+	border:1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 1px 0 5px #ccc;
+}
+#pics .box .pic img{
+	width: 192px;
+	height: auto;
+}

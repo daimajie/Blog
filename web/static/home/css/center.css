@@ -1,0 +1,16 @@
+.topbar{
+	height:auto;
+	/*margin-bottom: 50px;*/
+}
+.center{
+	margin-top:50px;
+}
+.center .profile .layui-tab-content{
+	border-left: 1px solid #eeeeee;
+	border-right: 1px solid #eeeeee;
+	border-bottom: 1px solid #eeeeee;
+}
+.center .profile form{
+	border:1px solid red;
+	padding-left: 0;
+}

@@ -1,0 +1,199 @@
+/*公共样式*/
+.float-l{
+    float: left;
+}
+.float-r{
+    float:right;
+}
+.error-color{
+    color: #FF5722;
+}
+
+
+/*header*/
+#user-center,
+#user-center li{
+    height: 50px;
+    line-height: 50px;
+
+}
+#user-center li a{
+    color: black;
+}
+#header{
+    height: 50px;
+    line-height: 50px;
+    background-color: #f6f6f6;/**/
+    border-bottom: 1px solid #666;
+
+}
+#header .layui-logo{
+    line-height: 50px;
+}
+#header .header-icon{
+    float: left;
+    margin-right: 15px;
+}
+#header .layui-layout-left {
+    left: 225px;
+}
+#user-center{
+    padding-right: 0;
+}
+
+/*left*/
+#left {
+    top: 51px;
+    /*padding-top: 15px;*/
+}
+#left a{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 45px;
+    padding-right: 30px;
+}
+#left .layui-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    margin-top: -19px;
+    padding-right: 21px;
+}
+
+/*body*/
+#body {
+    left: 200px;
+    top: 51px;
+    bottom: 44px;
+    right: 0px;
+}
+#body .layadmin-tabs-control{
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    cursor: pointer;
+    background-color: white;
+    line-height: 40px;
+    z-index: 999;
+    border-bottom: 1px solid #ddd;
+}
+#body .layui-icon-prev{
+    left: 0;
+    border-left: none;
+    border-right: 1px solid #f6f6f6;
+}
+#body .layui-icon-next{
+    right: 40px;
+    border-right: 1px solid #f6f6f6;
+}
+#body .layui-icon-down{
+    right: 0;
+}
+/*tab*/
+/*#tab-container{
+    margin: 0;
+    position: relative;
+}*/
+#tab-container .layui-tab-title{
+    position: absolute;
+    left: 41px;
+    top:0;
+    border-bottom:1px solid #ddd;
+    width: 3200px !important;
+}
+
+#tab-container .layui-tab-title li {
+    min-width: 0;
+    line-height: 40px;
+    max-width: 160px;
+    text-overflow: ellipsis;
+    padding-right: 40px;
+    overflow: hidden;
+    border-right: 1px solid #f6f6f6;
+    vertical-align: top;
+}
+#tab-container .layui-tab-title li .layui-tab-close {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    margin: -7px 0 0;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 10px;
+}
+
+
+#tab-container .layui-tab-title li.layui-this,
+#tab-container .layui-tab-title li:hover,
+#tab-container .layadmin-tabs-control:hover {
+    background-color: #f6f6f6;
+}
+#tab-container .layui-tab-title li:first-child .layui-tab-close {
+    display: none;
+}
+#tab-container .layui-tab-title li:first-child {
+    height: 40px;
+    width: 40px;
+    padding: 0 5px !important;
+}
+
+#tab-container{
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#tab-content{
+    background-color: #f9f9f9;
+    position: absolute;
+    top:41px;
+    left: 0;
+    right: 5px;
+    bottom: 0;
+    padding: 0;
+    overflow-y:auto;
+    overflow-x: hidden;
+}
+#tab-content .x-iframe{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    right:0;
+    left: 0;
+    top:0;
+    bottom: 0;
+}
+
+/*down*/
+/*下拉框*/
+#body .layui-icon-down{
+    position: absolute;
+    font-size: 14px;
+}
+#body .layui-icon-down > dl.down-nav{
+    position: absolute;
+    width: 140px;
+    border-bottom: 2px solid #009688;
+    background-color: white;
+
+    opacity: 0;
+    top:66px;
+    left:40px;
+}
+#body .layui-icon-down > dl.down-nav > dd{
+    border-bottom: 1px solid #f6f6f6;
+}
+#body .layui-icon-down > dl.down-nav > dd:hover{
+    background-color: #F0F0F0;
+}
+
+
+

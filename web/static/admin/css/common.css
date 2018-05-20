@@ -1,0 +1,77 @@
+.float-r{
+    float: right;
+}
+.float-l{
+    float: left;
+}
+.space-5{
+    clear: both;
+    padding: 5px;
+}
+.space-15{
+    clear: both;
+    padding: 15px;
+}
+html{
+    height: 100%;
+    overflow-y: auto;
+}
+.text-green{
+    color: #009688;
+    line-height: 36px;
+}
+
+
+/*content*/
+.content{
+    padding: 25px 15px;
+    background-color: white;
+}
+.help-block{
+    color: #FF5722;
+}
+
+/*表格*/
+.layui-table-cell.nosnap {/*自动换行*/
+    height: auto;
+    line-height: 28px;
+    padding: 0 15px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    box-sizing: border-box;
+}
+.tag_name{
+    cursor: pointer;
+    color: #FF5722;
+    border:1px solid #FF5722;
+    padding: 2px 3px;
+    border-radius: 2px;
+}
+
+/*话题搜索*/
+#search_topics{
+    position: absolute;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    border:1px solid #eee;
+    z-index: 9999;
+}
+#search_topics ul{
+    width: 100%;
+    height: auto;
+
+}
+#search_topics ul li{
+    padding:5px 10px;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+#search_topics ul li:hover{
+    background-color: #e2e2e2;
+}
