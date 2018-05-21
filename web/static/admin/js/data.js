@@ -23,6 +23,40 @@ var data = [
         ]
     },
     {
+        name : '日记相册',
+        icon : 'layui-icon layui-icon-picture',
+        cite : '日记相册',
+        childs : [
+            {
+                name : 'notebokk',
+                href : '/index.php?r=admin/notebook/index/index',
+                cite : '日记管理',
+            },
+            {
+                name : 'photo',
+                href : '/index.php?r=admin/notebook/index/index',
+                cite : '相册管理x',
+            },
+        ]
+    },
+    {
+        name : '评论收藏',
+        icon : 'layui-icon layui-icon-flag',
+        cite : '评论收藏',
+        childs : [
+            {
+                name : 'commit',
+                href : '/index.php?r=admin/notebook/index/index',
+                cite : '评论管理x',
+            },
+            {
+                name : 'collect',
+                href : '/index.php?r=admin/notebook/index/index',
+                cite : '收藏管理x',
+            },
+        ]
+    },
+    {
         name : '成员管理',
         cite : '成员管理',
         icon : 'layui-icon layui-icon-user',
@@ -57,34 +91,23 @@ var data = [
                 cite : '站点信息',
             },
             {
-                name : '日志管理',
+                name : '日志管理x',
                 href : '#',
-                cite : '日志管理',
+                cite : '日志管理x',
             },
             {
-                name : '备份管理',
+                name : '备份管理x',
                 href : '#',
-                cite : '备份管理',
+                cite : '备份管理x',
             },
             {
-                name : '缓存管理',
+                name : '缓存管理x',
                 href : '#',
-                cite : '缓存管理',
+                cite : '缓存管理x',
             },
         ]
     },
-    {
-        name : '评论&收藏',
-        href : '#',
-        icon : 'layui-icon layui-icon-auz',
-        cite : '评论&收藏',
-    },
-    {
-        name : '日记&相册',
-        href : '#',
-        icon : 'layui-icon layui-icon-auz',
-        cite : '日记&相册',
-    },
+
 
 
 

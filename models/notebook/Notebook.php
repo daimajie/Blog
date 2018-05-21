@@ -3,6 +3,11 @@
 namespace app\models\notebook;
 
 use Yii;
+use app\models\member\User;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\data\Pagination;
+
 
 /**
  * This is the model class for table "{{%notebook}}".
@@ -33,8 +38,6 @@ class Notebook extends \yii\db\ActiveRecord
         return [
             [['content'], 'required'],
             [['content'], 'string'],
-            [['user_id', 'created_at', 'updated_at'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -52,11 +55,50 @@ class Notebook extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'user_id',
+                'updatedByAttribute' => null,
+            ],
+        ];
+    }
+
+
+
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id'])
+            ->select(['id','username','photo']);
+    }
+
+    /**
+     * 获取日记列表
+     */
+    public static function getNotes(){
+        $query = self::find();
+
+        $count = $query->count();
+
+        $pagination = new Pagination(['totalCount' => $count,'pageSize' => 2]);
+
+        $data = $query
+            ->with('user')
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->asArray()
+            ->all();
+
+        return [
+            'pagination' => $pagination,
+            'data' => $data
+        ];
     }
 }

@@ -26,7 +26,7 @@ class TagController extends BaseController
         if(Yii::$app->request->isPost){
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 Yii::$app->session->setFlash('success', '添加标签成功。');
-                $model->name = '';
+                return $this->refresh();
             }
         }
 
@@ -45,7 +45,7 @@ class TagController extends BaseController
         if(Yii::$app->request->isPost){
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 Yii::$app->session->setFlash('success', '修改标签成功。');
-                $model->name = '';
+                return $this->refresh();
             }
         }
 

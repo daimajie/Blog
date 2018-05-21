@@ -33,8 +33,7 @@ class TopicController extends BaseController
         if(Yii::$app->request->isPost){
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 Yii::$app->session->setFlash('success', '创建话题成功。');
-                $model->name = $model->desc = '';
-                $model->id = $model->category_id = 0;
+                return $this->refresh();
             }
 
         }
@@ -55,7 +54,7 @@ class TopicController extends BaseController
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 //修改成功
                 Yii::$app->session->setFlash('success','修改话题成功。');
-                $model = new Topic();
+                return $this->refresh();
             }
         }
 
@@ -69,8 +68,8 @@ class TopicController extends BaseController
      * 话题删除
      */
     public function actionDelete(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
         try {
-            Yii::$app->response->format = Response::FORMAT_JSON;
 
             if (!Yii::$app->request->isAjax)
                 throw new BadRequestHttpException('请求方式不被允许。');

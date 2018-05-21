@@ -8,6 +8,7 @@ $config = [
     'name' => 'DAIMAJIE.COM', /*站点名称*/
     'language' => 'zh-CN',
     'defaultRoute' => 'index',
+    'layout' => 'layout',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log','jsUrlManager'],
     'aliases' => [
@@ -79,6 +80,7 @@ $config = [
         ],
     ],
     'params' => $params,
+
 ];
 
 if (YII_ENV_DEV) {

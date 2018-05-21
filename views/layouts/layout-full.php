@@ -5,7 +5,6 @@ use app\assets\home\AppAsset;
 
 AppAsset::register($this);
 LayuiAsset::register($this);
-
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,11 +41,45 @@ LayuiAsset::register($this);
             </div>
         </div>
     </div>
+    <div class="bg">
+        <div class="banner crossfade">
+            <div class="user-info">
+                <div class="photo">
+                    <img src="/static/home/img/photo.jpg" alt="">
+                </div>
+                <div class="brief">
+                    <p class="user-name">
+                        冰冰棒 | 范爷
+                        <span class="layui-badge layui-inline"><i class="layui-icon">&#xe62c;</i>   6172+</span>
+                    </p>
+                    <p class="font-16">签名： 梦想是陪我睡觉的东西，不实现它我会失眠。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="">
+            <div class="layui-container">
+                <ul class="sub-nav">
+                    <li class="sub-nav-item"><a href="#">Mysql</a></li>
+                    <li class="sub-nav-item"><a href="#">Nginx</a></li>
+                    <li class="sub-nav-item active"><a href="#">Java</a></li>
+                    <li class="sub-nav-item"><a href="#">Php</a></li>
+                    <li class="sub-nav-item"><a href="#">Javascript</a></li>
+                    <li class="sub-nav-item"><a href="#">boostrip</a></li>
+                    <li class="sub-nav-item more"><a href="#">更多<i class="layui-icon">&#xe602;</i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- /header -->
 
+
 <?= $content?>
 
+<!-- footer -->
+<div class="layui-clear"></div>
 <section class="flooter margin-t-10">
     <div class="layui-container">
         <div class="links">
@@ -69,14 +102,13 @@ LayuiAsset::register($this);
             <a class="followus-weixin" href="javascript:;" target="_blank" title="微信">
                 <div class="flw-weixin-box"></div>
             </a>
-            <a class="followus-weibo" href="#" target="_blank" title="新浪微博"></a>
-            <a class="followus-qzone" href="#" target="_blank" title="QQ空间"></a>
+            <a class="followus-weibo" href="http://weibo.com/u/3306361973" target="_blank" title="新浪微博"></a>
+            <a class="followus-qzone" href="http://user.qzone.qq.com/1059809142/" target="_blank" title="QQ空间"></a>
         </div>
     </div>
 </section>
-
+<!-- /footer -->
 <?php $this->endBody() ?>
-
 <?php
 //alert
 $session = Yii::$app->session;
@@ -90,6 +122,7 @@ if($successMsg)
 if($failMsg)
     $alert = "layer.msg('{$failMsg}', {time: 3000, icon:2});";
 ?>
+
 <script>
     layui.config({
         base: '/static/home/js/'
@@ -97,7 +130,6 @@ if($failMsg)
         <?= $alert?>
     });
 </script>
-
 </body>
 </html>
 <?php $this->endPage() ?>

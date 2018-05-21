@@ -1,15 +1,14 @@
 // 入口文件
-layui.define(['layer', 'element', 'crossfade', 'layedit', 'laypage'], function (exports) {
+layui.define(['index', 'layedit', 'laypage'], function (exports) {
     var layer = layui.layer
-    ,element = layui.element
     ,layedit = layui.layedit
     ,laypage = layui.laypage;
 
-  	//layer.msg('Hello World');
 
     /*构建一个编辑器*/
     var index = layedit.build('editor', {
-        height: 180
+        height: 180,
+        uploadImage: { url: '/upload/', type: 'post' }
     });
 
     /*分页*/

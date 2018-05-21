@@ -69,4 +69,26 @@ class Helper
     }
 
 
+    /**
+     * 循化文章数据把关联的作者头像索引转为实际地址
+     * @params $data array #文章列表
+     * @return array | false #转换作者头像后的文章列表
+     */
+    public static function photoInPlace($data){
+        if(!is_array($data))
+            return false;
+
+        $pics = Yii::$app->params['pics']; //获取固定头像信息
+
+        foreach($data as $key => &$val){
+            if($val['user']['photo'] > count($pics)) continue;
+            $val['user']['photo'] = $pics[$val['user']['photo']];
+        }
+
+        return $data;
+    }
+
+
+
+
 }

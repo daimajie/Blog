@@ -30,7 +30,7 @@ class IndexController extends BaseController
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 //添加成功
                 Yii::$app->session->setFlash('success', '添加友情链接成功。');
-                $model = new Friend();
+                return $this->refresh();
             }
         }
 
@@ -48,7 +48,7 @@ class IndexController extends BaseController
         if(Yii::$app->request->isPost){
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 Yii::$app->session->setFlash('success', '编辑友情链接成功。');
-                $model->name = $model->url = '';
+                return $this->refresh();
             }
         }
 

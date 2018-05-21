@@ -36,7 +36,7 @@ class CategoryController extends BaseController
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 //创建分类成功
                 Yii::$app->session->setFlash('success', '创建分类成功。');
-                $model->name = $model->desc = '';//清空数据
+                return $this->refresh();
             }
         }
 
@@ -55,7 +55,7 @@ class CategoryController extends BaseController
             if($model->load(Yii::$app->request->post()) && $model->save()){
                 //修改成功、
                 Yii::$app->session->setFlash('success','修改分类成功。');
-                $model->name = $model->desc = '';
+                return $this->refresh();
             }else
                 //修改失败
                 Yii::$app->session->setFlash('fail','修改分类失败，请重试。');

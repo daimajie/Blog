@@ -16,7 +16,6 @@ use yii\filters\VerbFilter;
 
 class IndexController extends Controller
 {
-    public $layout = 'layout';
 
     public function behaviors()
     {
@@ -58,7 +57,7 @@ class IndexController extends Controller
 
     //首页
     public function actionIndex(){
-
+        $this->layout = 'layout-full';
 
         return $this->render('index');
     }
