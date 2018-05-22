@@ -1,6 +1,6 @@
 <?php
 namespace app\modules\admin\modules\content\controllers;
-use app\models\content\Tag;
+use app\modules\admin\modules\content\models\Tag;
 use app\modules\admin\controllers\BaseController;
 use Yii;
 use yii\base\Exception;
@@ -66,9 +66,7 @@ class TagController extends BaseController
 
             $model = self::getModel($id);
 
-            if($model->delete() === false){
-                throw new Exception('删除失败，清重试。');
-            }
+            $model->delTagAndRelated();
 
             return ['errno'=>0,'message'=>'删除成功。'];
         }catch(Exception $e){
@@ -88,7 +86,7 @@ class TagController extends BaseController
         if($id <= 0)
             throw new BadRequestHttpException('请求参数错误。');
 
-        $model = Tag::findOne(['id' => $id]);
+        $model = Tag::findOne($id);
         if(is_null($model))
             throw new NotFoundHttpException('没有相关数据。');
 

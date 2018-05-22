@@ -93,7 +93,7 @@ if($failMsg)
 <script>
     layui.config({
         base: '/static/home/js/'
-    }).use(['layer'],function(){
+    }).use(['layer','index'],function(){
         <?= $alert?>
     });
 </script>

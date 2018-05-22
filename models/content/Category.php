@@ -5,6 +5,8 @@ namespace app\models\content;
 use Yii;
 use yii\base\Exception;
 use app\models\content\Topic;
+use yii\data\Pagination;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%category}}".
@@ -55,7 +57,47 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getTopics()
     {
-        return $this->hasMany(Topic::className(), ['category_id' => 'id']);
+        return $this->hasMany(Topic::className(), ['category_id' => 'id'])
+            ->select(['id','category_id','name','created_at'])
+            ->orderBy(['created_at'=>SORT_DESC])
+            ->limit(7);
+    }
+
+
+    public static function getCategoryAll($curr, $limit){
+        $query = self::find();
+        $count = $query->count();
+
+        $pagination = new Pagination(['totalCount' => $count]);
+        //设置页码
+        $pagination->setPage($curr - 1);
+        $pagination->setPageSize($limit);
+
+        $category = $query->with('topics')
+            ->select(['id','name'])
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->orderBy(['id'=>SORT_DESC])
+            ->asArray()
+            ->all();
+        //添加url
+        $category = self::addUrl($category);
+
+        return $category;
+    }
+
+    /**
+     * 给分类列表添加url链接 可以点击跳至指定分类页 或是 话题页
+     * 因为前台请求的数据不能动态生成
+     */
+    private static function addUrl($data){
+        foreach ($data as $key => &$val){
+            $val['url'] = Url::to(['category/detail','category_id'=>$val['id']]);
+            foreach($val['topics'] as $k => &$v){
+                $v['url'] = Url::to(['topic/index','topic_id'=>$v['id']]);
+            }
+        }
+        return $data;
     }
 
 

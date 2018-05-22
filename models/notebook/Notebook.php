@@ -69,7 +69,6 @@ class Notebook extends \yii\db\ActiveRecord
 
 
 
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -81,24 +80,29 @@ class Notebook extends \yii\db\ActiveRecord
 
     /**
      * 获取日记列表
+     * @params $curr int #当前请求页
+     * @params $limit int #每页限制数目
+     * @return array|null #日记几何
      */
-    public static function getNotes(){
+    public static function getNotes($curr=1, $limit=15){
         $query = self::find();
-
         $count = $query->count();
 
-        $pagination = new Pagination(['totalCount' => $count,'pageSize' => 2]);
+        $pagination = new Pagination(['totalCount' => $count]);
+        //配置当前页码
+        $limit = ($limit > Yii::$app->params['pageSize']) ? Yii::$app->params['pageSize'] : $limit;
+        $pagination->setPageSize($limit);
+        $pagination->setPage($curr - 1);
 
         $data = $query
+            ->alias('n')
             ->with('user')
+            ->select(['n.content,from_unixtime(n.created_at) as created_at,n.user_id'])
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->asArray()
             ->all();
 
-        return [
-            'pagination' => $pagination,
-            'data' => $data
-        ];
+        return $data;
     }
 }

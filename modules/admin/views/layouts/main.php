@@ -129,7 +129,7 @@ $this->title = 'Admin-Template';
 <script>
     layui.config({
         base: 'static/admin/js/'
-    }).use(['jquery','app', 'layer'], function(){
+    }).use(['jquery','app'], function(){
 
     });
 </script>

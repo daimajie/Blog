@@ -28,7 +28,7 @@ use yii\helpers\Url;
                     <tr>
                         <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
                         <th lay-data="{field:'id', width:120, sort: true, fixed: true}">ID</th>
-                        <th lay-data="{field:'name', width:150}">专题名称</th>
+                        <th lay-data="{field:'name', width:150}">话题名称</th>
                         <th lay-data="{field:'category', width:150}">所属分类</th>
                         <th lay-data="{field:'tags', templet: '#tagsTpl'}">标签(点击标签可对其进行编辑)</th>
                         <th lay-data="{field:'created_at', width:150}">创建时间</th>

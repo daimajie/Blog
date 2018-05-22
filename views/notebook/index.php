@@ -1,7 +1,5 @@
 <?php
-use yii\widgets\ActiveForm;
-use yii\helpers\Html;
-use app\components\View;
+
 ?>
 <div class="layui-clear"></div>
 <section class="content">
@@ -77,29 +75,34 @@ use app\components\View;
 </section>
 
 <?php
+$token =  \Yii::$app->request->getCsrfToken();
 $strJs = <<<STR
-layui.use(['index', 'laypage'],function(){
-    var laypage = layui.laypage;
-
-
-
-    
+layui.use(['laypage','laytpl'],function(){
+    var laypage = layui.laypage
+    ,laytpl = layui.laytpl;
     
     /*分页*/
     laypage.render({
         elem: 'pager'
-        ,count: "$pagination->totalCount"
-        ,limit: "$pagination->pageSize"
+        ,count: "{$count}"
+        ,limit: "{$limit}"
         ,theme: '#1E9FFF'
         ,jump: function(obj, first){
-            //obj包含了当前分页的所有参数，比如：
-            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
-            console.log(obj.limit); //得到每页显示的条数
+            //请求日记列表
+            $.ajax({
+                url : UrlManager.createUrl('/notebook/notes'),
+                type : 'post',
+                data : {'_csrf' : "$token", 'curr' : obj.curr, 'limit' : obj.limit},
+                success : function(d){
+                    var getTpl = $('#note-item').html()
+                    ,view = document.getElementById('notes-wrap');
+                    laytpl(getTpl).render(d, function(html){
+                      view.innerHTML = html;
+                    });
+                    
+                }
+            });
             
-            //首次不执行
-            if(!first){
-              //do something
-            }
         }
       });
       
@@ -110,11 +113,11 @@ STR;
 $this->registerJs($strJs);
 ?>
 <script id="note-item" type="text/html">
-    {{#  layui.each(d.list, function(index, item){ }}
+    {{#  layui.each(d.data, function(index, item){ }}
     <li class="artitem">
         <div class="contop">
             <div class="photo float-l">
-                <a href="#"><img src="{{ item.user.photo }}" alt="{{ item.user.username }}"></a>
+                <a href="javascript:;"><img src="{{ item.user.photo }}" alt="{{ item.user.username }}"></a>
             </div>
             <div class="info float-l">
                 <p class="layui-word-aux font-bold font-14">{{ item.user.username }}</p>
@@ -126,7 +129,7 @@ $this->registerJs($strJs);
         </div>
     </li>
     {{#  }); }}
-    {{#  if(d.list.length === 0){ }}
+    {{#  if(d.data.length === 0){ }}
     无数据
     {{#  } }}
 </script>

@@ -5,7 +5,9 @@
 .content .topics{
 	margin: 15px 0;
 }
-
+.content .topics ul{
+    overflow: hidden;
+}
 .content .topics li {
     display: inline-block;
     float: left;

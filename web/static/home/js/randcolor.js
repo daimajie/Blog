@@ -7,7 +7,6 @@ layui.define(['jquery'], function(exports){ //提示：模块也可以依赖其�
                 var randColor = obj.changeColor();
                 $(this).css({
                     'border-color': '#'+randColor,
-                    'color': '#'+randColor
                 });
             });
         },

@@ -9,8 +9,7 @@ use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use Yii;
-use yii\data\Pagination;
-use yii\helpers\VarDumper;
+
 
 class Article extends ArticleModel
 {
@@ -208,53 +207,7 @@ class Article extends ArticleModel
     }
 
 
-    /**
-     * #获取文章列表
-     */
-    public static function getArticles($page, $limit, $type){
-        $query = self::find();
 
-        //获取文章类型(回收站，草稿箱)
-        if($type === 'recycle-box'){
-            //获取回收站数据
-            $query->andWhere('recycle=1');
-        }elseif($type === 'draft-box'){
-            //获取草稿箱数据
-            $query->andWhere(['and', 'draft=1', 'recycle!=1']);
-        }else{
-            //获取排除回收站及草稿箱的数据
-            $query->andWhere(['and','recycle != 1','draft != 1']);
-        }
-
-
-        $count = $query->count();
-        $pagination = new Pagination(['totalCount' => $count]);
-
-        //配置当前页码
-        $pagination->setPageSize($limit);
-        $pagination->setPage($page - 1);
-
-        //获取数据
-        $data = $query->with('user')->with('topic')
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->orderBy(['created_at' => SORT_DESC,'id' => SORT_DESC])
-            ->asArray()
-            ->all();
-        $type = [1=>'原创','翻译','转载'];
-        foreach ($data as $k => &$v){
-            $v['type'] = $type[$v['type']];
-            $v['author'] = $v['user']['username'];
-            $v['topicName'] = $v['topic']['name'];
-        }
-
-        return [
-            'data' => $data,
-            'count' => $count,
-        ];
-
-
-    }
 
     /**
      * 删除文章关联数据 文章内容，文章标签关联数据

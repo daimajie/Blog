@@ -3,6 +3,8 @@
 namespace app\models\content;
 use yii\behaviors\TimestampBehavior;
 use Yii;
+use yii\data\Pagination;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "{{%topic}}".
@@ -64,6 +66,7 @@ class Topic extends \yii\db\ActiveRecord
             'desc' => '简述',
             'category_id' => '所属分类',
             'created_at' => '创建时间',
+            'count' => '收录文章'
         ];
     }
 
@@ -101,6 +104,71 @@ class Topic extends \yii\db\ActiveRecord
         }
         return $query->count();
     }
+
+    /**
+     * 获取指定话题下的所有文章 可同时指定匹配某个标签
+     * @params $topic_id int #话题id
+     * @params $tag_id int #标签id
+     * @params $curr int #当前页码
+     * @params $limit int #每页限数
+     * @return array | int #如果只指定话题标签返回匹配的文章数目，同时指定页码和限数则返回匹配的文章列表
+     */
+    public static function getArticlesByTopicAndTag($topic_id, $tag_id=null,$curr=null, $limit=null){
+        //获取查询对象
+        $query = self::getQueryBuild($topic_id, $tag_id);
+        $count = $query->count();
+
+        //如果未指定页码说明之获取匹配文章数目
+        if(empty($curr) || empty($limit))
+            return $count;
+
+        //分页 否则获取文章列表
+        $pagiantion = new Pagination(['totalCount'=>$count]);
+
+        //配置页码
+        $pagiantion->setPage($curr-1);
+        $pagiantion->setPageSize($limit);
+
+        //获取数据
+        $articles = $query->with('user')->with('topic')
+            ->select(['article.*','from_unixtime(created_at) as created_at'])
+            ->offset($pagiantion->offset)
+            ->limit($pagiantion->limit)
+            ->orderBy(['created_at'=>SORT_DESC, 'id'=>SORT_DESC])
+            ->asArray()
+            ->all();
+
+        return $articles;
+
+    }
+
+    /**
+     * 获取查询生成器
+     */
+    private static function getQueryBuild($topic_id, $tag_id){
+        $topic_id = (int)$topic_id;
+        $tag_id = (int)$tag_id;
+        if($topic_id <= 0)
+            throw new BadRequestHttpException('请求参数错误。');
+
+        $query = Article::find()
+            ->where('recycle != 1')
+            ->andWhere('draft != 1')
+            ->andWhere(['topic_id'=>$topic_id]);
+
+        if(!empty($tag_id) && $tag_id > 0){
+            $query//->select(['{{%article}}.*','{{%article_tag}}.*'])
+                ->leftJoin('{{%article_tag}}','{{%article_tag}}.article_id={{%article}}.id')
+                ->andWhere(['tag_id'=>$tag_id]);
+        }
+        return $query;
+    }
+
+
+
+
+
+
 
 
 

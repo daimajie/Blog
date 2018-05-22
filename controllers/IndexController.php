@@ -1,20 +1,21 @@
 <?php
 namespace app\controllers;
+use app\models\content\Article;
 use app\models\member\LoginForm;
 use app\models\member\PasswordResetRequestForm;
 use yii\base\Exception;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use app\models\member\RegisterForm;
 use Yii;
 use app\components\Helper;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\AccessControl;
 use app\models\member\ResetPasswordForm;
 use yii\filters\VerbFilter;
 
-class IndexController extends Controller
+class IndexController extends BaseController
 {
 
     public function behaviors()
@@ -59,8 +60,39 @@ class IndexController extends Controller
     public function actionIndex(){
         $this->layout = 'layout-full';
 
-        return $this->render('index');
+        return $this->render('index',['pageSize'=>Yii::$app->params['pageSize']]);
     }
+
+    //ajax获取首页文章列表
+    public function actionGetArticles(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try{
+            //验证方法
+            if(!Yii::$app->request->isAjax)
+                throw new MethodNotAllowedHttpException('请求方式不被允许。');
+
+            //验证参数
+            $curr = (int)Yii::$app->request->post('curr');
+            $limit = (int)Yii::$app->request->post('limit');
+
+            //获取数据
+            $articles = Article::getArticlesAll($curr,$limit);
+            if(empty($articles))
+                throw new NotFoundHttpException('暂无数据。');
+
+            //转换头像
+            $articles = Helper::photoInPlace($articles);
+
+            //发送数据
+            return ['errno'=>0,'data'=>$articles];
+
+        }catch (MethodNotAllowedHttpException $e){
+            return $this->redirect(['index/index']);
+        }catch (Exception $e){
+            return ['errno'=>1,'data'=>[], 'message'=>$e->getMessage()];
+        }
+    }
+
 
     //登陆
     public function actionLogin(){
