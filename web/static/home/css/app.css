@@ -48,6 +48,15 @@
 .error-color{
 	color: #FF5722;
 }
+.site-h1 {
+	margin-bottom: 20px;
+	line-height: 60px;
+	padding-bottom: 10px;
+	padding-left:15px;
+	color: #393D49;
+	font-size: 28px;
+	font-weight: 300;
+}
 
 
 /*header*/
@@ -293,7 +302,7 @@
 .sidebar .cloud-tags li{
 	float:left;
 	margin:5px 8px;
-	padding: 5px 8px;
+	padding: 3px 8px;
 	border:1px solid #009688;
 	border-radius: 15px;
 }

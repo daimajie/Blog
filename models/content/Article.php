@@ -2,8 +2,12 @@
 
 namespace app\models\content;
 
+use app\components\Helper;
 use app\models\member\User;
 use yii\data\Pagination;
+use yii\helpers\Url;
+use yii\helpers\VarDumper;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%article}}".
@@ -63,7 +67,7 @@ class Article extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id'])
-            ->select(['id','username','photo']);
+            ->select(['id','username','photo','author','total']);
     }
 
     /**
@@ -71,8 +75,8 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getTags()
     {
-        return $this->hasMany(Tag::className(), ['id' => 'article_id'])
-            ->viaTable('{{%article_tag}}', ['tag_id' => 'id']);
+        return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
+            ->viaTable('{{%article_tag}}', ['article_id' => 'id']);
     }
 
     /**
@@ -168,6 +172,81 @@ class Article extends \yii\db\ActiveRecord
 
         return $data;
 
+    }
+
+
+    /**
+     * 获取指定文章详情
+     * @param $article_id int #文章id
+     * @return array #文章详情
+     */
+    public static function getAticleDetail($article_id){
+        $id = (int)$article_id;
+        if($id <= 0) throw new BadRequestHttpException('请求参数错误。');
+
+        $article = self::find()->with('user')->with('topic')->with('content')->with('tags')
+            ->select(['id','title','type','visited','comment','likes','created_at','user_id','topic_id','content_id'])
+            ->where(['id'=>$article_id])
+            ->andWhere(['and', 'draft != 1', 'recycle != 1'])
+            //->asArray()
+            ->one();
+        if(!$article)
+            throw new NotFoundHttpException('没有找到相关数据');
+
+        //设置头像
+        $article = Helper::photoInPlace([$article])[0];
+
+        //设置类型
+        $type = [1=>'原创',2=>'翻译',3=>'转载'];
+        $article['type'] = $type[$article['type']];
+
+        //设置角色
+        $author = ['普通用户','签约作者','管理'];
+        $article['user']['author'] = $author[$article['user']['author']];
+
+        //返回数据
+        return $article;
+    }
+
+    /**
+     * 获取上一篇和下一篇
+     * @param int $article_id #当前文章id
+     * @param int $subject_id #当前专题
+     * @return array
+     */
+    public static function prevAndNext($article_id, $topic_id){
+        $previous = self::find()
+            ->select(['id', 'title'])
+            ->andFilterWhere(['<', 'id', $article_id])
+            ->andFilterWhere(['topic_id'=>$topic_id])
+            ->andFilterWhere(['!=', 'recycle', 1])
+            ->andFilterWhere(['!=', 'draft', 1])
+            ->orderBy(['id'=>SORT_DESC])
+            ->limit(1)
+            ->one();
+        $next = self::find()
+            ->select(['id', 'title'])
+            ->andFilterWhere(['>', 'id', $article_id])
+            ->andFilterWhere(['topic_id'=>$topic_id])
+            ->andFilterWhere(['!=', 'recycle', 1])
+            ->andFilterWhere(['!=', 'draft', 1])
+            ->orderBy(['id'=>SORT_ASC])
+            ->limit(1)
+            ->one();
+
+        //拼接url
+        $prev_article = [
+            'url' => !is_null($previous) ? Url::current(['article_id'=>$previous->id]):'javascript:void(0);',
+            'title' => !is_null($previous)?$previous->title:'已经是第一篇了',
+        ];
+        $next_article = [
+            'url' => !is_null($next)?Url::current(['article_id'=>$next->id]):'javascript:void(0);',
+            'title' => !is_null($next)?$next->title:'已经是最后一篇了',
+        ];
+        return [
+            'prev' => $prev_article,
+            'next' => $next_article
+        ];
     }
 
 

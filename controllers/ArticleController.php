@@ -1,0 +1,278 @@
+<?php
+namespace app\controllers;
+
+use app\models\collect\LikesCollect;
+use app\models\content\Article;
+use Yii;
+use yii\base\Exception;
+use yii\helpers\VarDumper;
+use yii\web\BadRequestHttpException;
+use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\filters\AccessControl;
+
+class ArticleController extends BaseController
+{
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['add-likes'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['add-likes','del-likes','add-collect','del-collect'],/*每个方法内也要添加限制*/
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+    /**
+     * 文章详情
+     */
+    public function actionIndex($article_id){
+        //获取文章详情
+        $article = Article::getAticleDetail($article_id);
+
+        //获取文章上一页和下一页
+        $prevAndNext = Article::PrevAndNext($article_id, $article['topic_id']);
+
+
+        //获取当前用户是否收藏喜欢该文章
+        $likes = $collect = 0;
+        if(!Yii::$app->user->isGuest){
+            $likes = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 0,
+            ]);
+            $collect = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 1,
+            ]);
+        }
+
+        $identity = Yii::$app->user->identity;
+
+
+
+
+        //累加阅读数
+        $article->updateCounters(['visited' => 1]);
+
+        return $this->render('index',[
+            'article' => $article,
+            'prevAndNext' => $prevAndNext,
+            'likes' => $likes,
+            'collect' =>$collect,
+            'identity' => $identity,
+        ]);
+    }
+    
+    
+    /**
+     * 点赞
+     */
+    public function actionAddLikes(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try{
+            //检测方法
+            if(!Yii::$app->request->isAjax)
+                throw new MethodNotAllowedHttpException('请求方式不被允许。');
+
+            //是否登录
+            if(Yii::$app->user->isGuest)
+                throw new Exception('请先登录，在进行点赞操作。');
+
+
+            //获取模型
+            $article_id = (int)Yii::$app->request->post('article_id');
+            $article = self::getModel($article_id);
+
+            //检测是否存在
+            $isExist = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 0,
+            ]);
+            if($isExist)
+                throw new Exception('已经点赞此文章，请不要重复操作。');
+
+
+            //写入关联数据
+            $model = new LikesCollect();
+            $model->article_id = $article->id;
+            $model->user_id = Yii::$app->user->id;
+            $model->type = 0;//0为点赞1为收藏
+
+            if(!$model->save(false) !== false)
+                throw new Exception('写入数据失败，请重试。');
+
+            //累计文章喜欢数
+            $article->updateCounters(['likes' => 1]);
+
+            return ['errno'=>0, 'message'=>'点赞成功。'];
+
+        }catch (Exception $e){
+            return ['errno'=>1, 'message'=>$e->getMessage()];
+        }
+    }
+
+    /**
+     * 取消点赞
+     */
+    public function actionDelLikes(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try{
+            //检测方法
+            if(!Yii::$app->request->isAjax)
+                throw new MethodNotAllowedHttpException('请求方式不被允许。');
+
+            //是否登录
+            if(Yii::$app->user->isGuest)
+                throw new Exception('请先登录，在进行此操作。');
+
+            //获取模型
+            $article_id = (int)Yii::$app->request->post('article_id');
+            $article = self::getModel($article_id);
+
+
+
+            //写入关联数据
+            $model = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 0,
+            ]);
+
+
+            if($model->delete() === false)
+                throw new Exception('写入数据失败，请重试。');
+
+            //累计文章喜欢数
+            $article->updateCounters(['likes' => -1]);
+
+            return ['errno'=>0, 'message'=>'取消点赞成功。'];
+
+        }catch (Exception $e){
+            return ['errno'=>1, 'message'=>$e->getMessage()];
+        }
+    }
+
+    /**
+     * 收藏
+     */
+    public function actionAddCollect(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try{
+            //检测方法
+            if(!Yii::$app->request->isAjax)
+                throw new MethodNotAllowedHttpException('请求方式不被允许。');
+
+            //是否登录
+            if(Yii::$app->user->isGuest)
+                throw new Exception('请先登录，在进行收藏操作。');
+
+            //获取模型
+            $article_id = (int)Yii::$app->request->post('article_id');
+            $article = self::getModel($article_id);
+
+            //检测是否存在
+            $isExist = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 1, //1为收藏0为喜欢
+            ]);
+            if($isExist)
+                throw new Exception('已经收藏此文章，请不要重复操作。');
+
+
+            //写入关联数据
+            $model = new LikesCollect();
+            $model->article_id = $article->id;
+            $model->user_id = Yii::$app->user->id;
+            $model->type = 1;//0为点赞1为收藏
+
+            if(!$model->save(false) !== false)
+                throw new Exception('写入数据失败，请重试。');
+
+            //累计文章喜欢数
+            $article->updateCounters(['collect' => 1]);
+
+            return ['errno'=>0, 'message'=>'收藏成功。'];
+
+
+        }catch (Exception $e){
+            return ['errno' => 1, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * 取消收藏
+     */
+    public function actionDelCollect(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try{
+            //检测方法
+            if(!Yii::$app->request->isAjax)
+                throw new MethodNotAllowedHttpException('请求方式不被允许。');
+
+            //是否登录
+            if(Yii::$app->user->isGuest)
+                throw new Exception('请先登录，在进行此操作。');
+
+            //获取模型
+            $article_id = (int)Yii::$app->request->post('article_id');
+            $article = self::getModel($article_id);
+
+
+            //写入关联数据
+            $model = LikesCollect::findOne([
+                'user_id' => Yii::$app->user->id,
+                'article_id' => $article->id,
+                'type' => 1, //1为收藏0为喜欢
+            ]);
+
+            if($model->delete() === false)
+                throw new Exception('写入数据失败，请重试。');
+
+            //累计文章喜欢数
+            $article->updateCounters(['collect' => -1]);
+
+            return ['errno'=>0, 'message'=>'取消收藏成功。'];
+
+
+        }catch (Exception $e){
+            return ['errno' => 1, 'message' => $e->getMessage()];
+        }
+    }
+
+
+
+    /**
+     * 获取模型
+     */
+    private static function getModel($id){
+        $id = (int)$id;
+        if($id <= 0)
+            throw new BadRequestHttpException('请求参数错误。');
+
+        $model = Article::findOne($id);
+        if(!$model)
+            throw new NotFoundHttpException('没有相关数据。');
+        return $model;
+    }
+
+
+
+
+}

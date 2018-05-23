@@ -218,4 +218,12 @@ class User extends ActiveRecord implements IdentityInterface
 
 
     }
+
+    /**
+     * 获取头像
+     */
+    public function getPic(){
+        $pics = Yii::$app->params['pics'];
+        return $pics[Yii::$app->user->identity->photo];
+    }
 }

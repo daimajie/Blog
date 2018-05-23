@@ -7,6 +7,7 @@ use yii\base\Exception;
 use app\models\content\Topic;
 use yii\data\Pagination;
 use yii\helpers\Url;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%category}}".
@@ -25,6 +26,17 @@ class Category extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%category}}';
+    }
+    public function behaviors()
+    {
+
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'updatedAtAttribute' => null
+            ],
+
+        ];
     }
 
     /**
@@ -58,7 +70,7 @@ class Category extends \yii\db\ActiveRecord
     public function getTopics()
     {
         return $this->hasMany(Topic::className(), ['category_id' => 'id'])
-            ->select(['id','category_id','name','created_at'])
+            ->select(['id','category_id','name','created_at','desc'])
             ->orderBy(['created_at'=>SORT_DESC])
             ->limit(7);
     }
@@ -74,7 +86,7 @@ class Category extends \yii\db\ActiveRecord
         $pagination->setPageSize($limit);
 
         $category = $query->with('topics')
-            ->select(['id','name'])
+            ->select(['id','name','desc','from_unixtime(created_at) as created_at'])
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->orderBy(['id'=>SORT_DESC])

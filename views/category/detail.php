@@ -20,22 +20,20 @@ AppAsset::addCss($this,'static/home/css/topics.css');
         <div class="layui-row">
             <div class="layui-col-md9">
                 <div class="topics">
-                    <blockquote class="layui-elem-quote layui-quote-nm">
-                        <h1><?= $category['name']?></h1>
-                        <?= $category['desc']?>
-                    </blockquote>
-                    <ul>
+                    <h1 class="site-h1">(分类) <?= $category['name']?></h1>
+                    <ul class="topic-box">
                         <?php
                         if(!empty($topics)):
-                        foreach($topics as $item):?>
-                        <li class="topic-item">
-                            <a href="<?= Url::to(['topic/index','topic_id'=>$item['id']])?>" ><?= $item['name']?></a>
-                            <span class="layui-badge-rim layui-btn layui-btn-primary">收录<?= $item['count']?></span>
-                        </li>
-                        <?php endforeach;
+                            foreach($topics as $item):?>
+                                <li class="topic-item">
+                                    <a href="<?= Url::to(['topic/index','topic_id'=>$item['id']])?>"><?= $item['name']?></a>
+                                    <span class="layui-badge-rim"><?= $item['count']?></span>
+                                </li>
+                            <?php endforeach;
                         endif;
                         ?>
                     </ul>
+
                 </div>
             </div>
             <div class="layui-col-md3">
