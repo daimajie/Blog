@@ -47,6 +47,7 @@
     height: 30px;
     border-radius: 50%;
     border: 1px solid #e8e8e8;
+	margin-top:15px;
 }
 .content .comment .uphoto img{
 	width: 100%;
@@ -58,7 +59,7 @@
 	padding: 0 5px!important;
 }
 .content .comment .citems .ucont .reply{
-	border-left:2px solid #f2f2f2;
+	/*border-left:2px solid #f2f2f2;*/
 	padding-left: 5px;
 }
 
@@ -81,4 +82,9 @@
 #pane p{
 	text-align: center;
 	margin:50px auto;
+}
+input.reply-content,
+a.reply-btn{
+	height: 30px !important;
+	line-height: 30px;
 }

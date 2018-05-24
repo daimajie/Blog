@@ -13,4 +13,5 @@ return [
         '/static/home/img/pic/08.jpg',
         '/static/home/img/pic/09.jpg',
     ],
+    'guest' => '/static/home/img/niming.jpg',
 ];

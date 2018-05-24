@@ -57,6 +57,9 @@
 	font-size: 28px;
 	font-weight: 300;
 }
+.layui-link{
+	cursor: pointer;
+}
 
 
 /*header*/

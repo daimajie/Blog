@@ -6,4 +6,5 @@ return [
     'content.tag.max' => 35, //每个话题下标签个数上限
     'pageSize' => 15, //前台文章每页显示条数
     'pics' => $data['pics'],  //十张默认头像
+    'guest' => $data['guest'], //游客头像
 ];
