@@ -2,6 +2,8 @@
 use yii\helpers\Html;
 use app\assets\LayuiAsset;
 use app\assets\home\AppAsset;
+use yii\helpers\Url;
+use yii\widgets\Menu;
 
 AppAsset::register($this);
 LayuiAsset::register($this);
@@ -24,20 +26,54 @@ LayuiAsset::register($this);
         <div class="layui-container">
             <a class="logo layui-hide-xs layui-hide-sm layui-show-md-block" href="/">DAIMAJIE.COM</a>
             <div class="">
-                <ul class="layui-nav float-r" lay-filter="">
-                    <li class="layui-nav-item"><a href="">最新活动</a></li>
-                    <li class="layui-nav-item layui-this"><a href="">产品</a></li>
-                    <li class="layui-nav-item"><a href="">大数据</a></li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">解决方案</a>
-                        <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                            <dd><a href="">移动模块</a></dd>
-                            <dd><a href="">后台模版</a></dd>
-                            <dd><a href="">电商平台</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item"><a href="">社区</a></li>
-                </ul>
+                <?=
+                Menu::widget([
+
+                    'activateItems' => true,
+                    'activeCssClass' => 'layui-this',
+                    'options' => [
+                        'class'=>'layui-nav float-r',
+                        'lay-filter'=>'',
+
+                    ],
+                    'itemOptions' => [
+                        'class'=>'layui-nav-item',
+                    ],
+
+
+                    'submenuTemplate' => "<dl class='layui-nav-child'>{items}</dl>",
+                    'items' => [
+                        ['label' => '首页', 'url' => ['/index/index']],
+                        ['label' => '日记', 'url' => ['/notebook/index']],
+                        ['label' => '分类', 'url' => ['/category/index']],
+                        [
+                            'label' => Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username,
+                            'url' => ['/member/center'],
+                            'items' => [
+                                [
+                                    'label' => '个人中心',
+                                    'url' => ['/member/center'],
+                                    'options' => [
+                                        'tag' => 'dd',
+                                        'class' => ''
+                                    ],
+                                ],
+                                [
+                                    'label' => '退出',
+                                    'url' => ['/index/logout'],
+                                    'options' => [
+                                        'tag' => 'dd',
+                                        'class' => ''
+                                    ],
+                                ],
+                            ],
+                            'visible' => !Yii::$app->user->isGuest
+                        ],
+                        ['label' => '登录', 'url' => ['/index/login'],'visible' => Yii::$app->user->isGuest],
+                        ['label' => '注册', 'url' => ['/index/register'],'visible' => Yii::$app->user->isGuest],
+                    ],
+                ]);
+                ?>
             </div>
         </div>
     </div>
@@ -60,21 +96,20 @@ LayuiAsset::register($this);
     <div class="sub">
         <div class="">
             <div class="layui-container">
-                <ul class="sub-nav">
-                    <li class="sub-nav-item"><a href="#">Mysql</a></li>
-                    <li class="sub-nav-item"><a href="#">Nginx</a></li>
-                    <li class="sub-nav-item active"><a href="#">Java</a></li>
-                    <li class="sub-nav-item"><a href="#">Php</a></li>
-                    <li class="sub-nav-item"><a href="#">Javascript</a></li>
-                    <li class="sub-nav-item"><a href="#">boostrip</a></li>
-                    <li class="sub-nav-item more"><a href="#">更多<i class="layui-icon">&#xe602;</i></a></li>
-                </ul>
+                <?=
+                Menu::widget([
+                    'activateItems' => true,
+                    'activeCssClass' => 'active',
+                    'options' => ['class'=>'sub-nav'],
+                    'itemOptions' => ['class'=>'sub-nav-item'],
+                    'items' => $this->params['cats'],
+                ]);
+                ?>
             </div>
         </div>
     </div>
 </section>
 <!-- /header -->
-
 
 <?= $content?>
 
@@ -84,26 +119,19 @@ LayuiAsset::register($this);
     <div class="layui-container">
         <div class="links">
             <ul>
-                <li><a href="#" target="_blank">网站首页</a></li>
-                <li><a href="#" target="_blank">企业合作</a></li>
-                <li><a href="#" target="_blank">人才招聘</a></li>
-                <li> <a href="#" target="_blank">联系我们</a></li>
-                <li> <a href="#" target="_blank">讲师招募</a></li>
-                <li> <a href="#" target="_blank">常见问题</a></li>
-                <li> <a href="#" target="_blank">意见反馈</a></li>
-                <li><a href="#" target="_blank">慕课大学</a></li>
-                <li> <a href="#" target="_blank">友情链接</a></li>
-                <li><a href="#" target="_blank">合作专区</a></li>
-                <li><a href="#" target="_blank">关于我们</a></li>
+                <li><a href="/" target="_blank">网站首页</a></li>
+                <li><a href="<?= Url::to(['/notebook/index'])?>" target="_blank">心情日记</a></li>
+                <li><a href="<?= Url::to(['/category/index'])?>" target="_blank">文章分类</a></li>
+                <li> <a href="<?= Url::to(['/category/index'])?>" target="_blank">热门话题</a></li>
+                <li> <a href="<?= Url::to(['/category/index'])?>" target="_blank">友情链接</a></li>
+                <li><a href="<?= Url::to(['/category/index'])?>" target="_blank">关于我们</a></li>
             </ul>
-            <p class="layui-clear">Copyright © 2018 imooc.com All Rights Reserved | 京ICP备 12003892号-11 </p>
+            <p class="layui-clear">Copyright © 2018 DAIMAJIE.COM</p>
         </div>
         <div class="followme float-r">
-            <a class="followus-weixin" href="javascript:;" target="_blank" title="微信">
-                <div class="flw-weixin-box"></div>
-            </a>
-            <a class="followus-weibo" href="http://weibo.com/u/3306361973" target="_blank" title="新浪微博"></a>
-            <a class="followus-qzone" href="http://user.qzone.qq.com/1059809142/" target="_blank" title="QQ空间"></a>
+            <a class="followus-weixin" href="#" target="_blank" title="微信"></a>
+            <a class="followus-weibo" href="#" target="_blank" title="新浪微博"></a>
+            <a class="followus-qzone" href="#" target="_blank" title="QQ空间"></a>
         </div>
     </div>
 </section>

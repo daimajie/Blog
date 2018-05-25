@@ -16,8 +16,11 @@ return [
             'class' => 'app\modules\admin\modules\setting\Module',
         ],
 
-        'notebook' => [/*未完成*/
+        'notebook' => [
             'class' => 'app\modules\admin\modules\notebook\Module',
+        ],
+        'comment' => [
+            'class' => 'app\modules\admin\modules\comment\Module',
         ],
     ],
     'components' => [

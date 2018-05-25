@@ -1,5 +1,7 @@
 <?php
 namespace app\modules\admin\modules\content\models;
+use app\models\collect\LikesCollect;
+use app\models\comment\Comment;
 use app\models\content\Article as ArticleModel;
 use app\models\content\ArticleTag;
 use app\models\content\Content;
@@ -8,6 +10,7 @@ use app\models\content\Topic;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use app\models\member\User;
 use Yii;
 
 
@@ -120,6 +123,10 @@ class Article extends ArticleModel
                 }
             }
 
+            //话题计数 作者计数
+            Topic::updateAllCounters(['count'=>1],['id'=>$this->topic_id]);
+            User::updateAllCounters(['total'=>1], ['id'=>$this->user_id]);
+
             $transaction->commit();
             return true;
         }catch (Exception $e){
@@ -142,6 +149,12 @@ class Article extends ArticleModel
         //保存 文章内容 标签 文章 及文章与标签关联数据
         $transaction = self::getDb()->beginTransaction();
         try{
+            if((int)$this->topic_id !== (int)$this->getOldAttribute('topic_id')){
+                Topic::updateAllCounters(['count'=>-1],['id'=>$this->getOldAttribute('topic_id')]);
+                Topic::updateAllCounters(['count'=>+1],['id'=>$this->topic_id]);
+            }
+
+
             //写入内容
             if($this->pri_content){
                 $content = Content::findOne(['id'=>$this->content_id]);
@@ -195,6 +208,8 @@ class Article extends ArticleModel
                 }
             }
 
+
+
             $transaction->commit();
             return true;
         }catch (Exception $e){
@@ -213,8 +228,17 @@ class Article extends ArticleModel
      * 删除文章关联数据 文章内容，文章标签关联数据
      */
     public function deleteArticle(){
-        $transaction = $transaction = self::getDb()->beginTransaction();;
+        $transaction = $transaction = self::getDb()->beginTransaction();
         try{
+            //删除计数
+            Topic::updateAllCounters(['count' => -1],['id'=>$this->topic_id]);
+            User::updateAllCounters(['total' => -1],['id'=>$this->user_id]);
+
+            //删除收藏点赞和评论
+            LikesCollect::deleteAll(['article_id'=>$this->id]);
+            Comment::deleteAll(['article_id'=>$this->id]);
+
+
             //删除标签关联数据
             if(ArticleTag::deleteAll(['article_id'=>$this->id]) === false)
                 throw new Exception('删除标签关联数据失败。');

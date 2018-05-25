@@ -115,7 +115,7 @@ class ArticleController extends BaseController
                 throw new BadRequestHttpException('请求参数错误。');
 
             //获取模型、
-            $model = self::getModel(24);
+            $model = self::getModel($aid);
             $model->recycle = 1;
             if($model->save(false) === false){
                 throw new Exception('放入回收站失败，清重试。');

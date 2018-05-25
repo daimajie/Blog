@@ -307,7 +307,7 @@ class ArticleController extends BaseController
                 throw new Exception('写入评论失败，请重试。');
 
             //评论数累加
-            Article::updateAllCounters(['comment'=>1]);
+            Article::updateAllCounters(['comment'=>1],['id'=>$comment->article_id]);
 
             return [
                 'errno'=>0,
@@ -373,7 +373,7 @@ class ArticleController extends BaseController
             if($comment->delete() === false)
                 throw new Exception('删除评论失败，请重试。');
 
-            @Article::updateAllCounters(['comment' => -(1 + (int)$num)]);
+            @Article::updateAllCounters(['comment' => -(1 + (int)$num)], ['id'=>$comment->article_id]);
 
             //返回结果
             return ['errno'=>0, 'message'=>'删除评论成功。'];

@@ -1,5 +1,6 @@
 <?php
 namespace app\modules\admin\modules\notebook\controllers;
+use app\components\Helper;
 use app\models\notebook\Notebook;
 use app\modules\admin\controllers\BaseController;
 use Yii;
@@ -129,6 +130,7 @@ class IndexController extends BaseController
                 throw new NotFoundHttpException('没有相关数据。');
             foreach($data as $key => &$val){
                 $val['username'] = $val['user']['username'];
+                $val['content'] = Helper::truncate_utf8_string($val['content'],55);
             }
 
             return [

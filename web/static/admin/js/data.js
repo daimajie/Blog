@@ -33,9 +33,9 @@ var data = [
                 cite : '日记管理',
             },
             {
-                name : 'photo',
-                href : '/index.php?r=admin/notebook/index/index',
-                cite : '相册管理x',
+                name : 'album',
+                href : '/index.php?r=admin/notebook/album/index',
+                cite : '相册管理',
             },
         ]
     },
@@ -45,14 +45,14 @@ var data = [
         cite : '评论收藏',
         childs : [
             {
-                name : 'commit',
-                href : '/index.php?r=admin/notebook/index/index',
-                cite : '评论管理x',
+                name : 'comment',
+                href : '/index.php?r=admin/comment/comment/comment',
+                cite : '评论管理',
             },
             {
-                name : 'collect',
-                href : '/index.php?r=admin/notebook/index/index',
-                cite : '收藏管理x',
+                name : 'reply',
+                href : '/index.php?r=admin/comment/comment/reply',
+                cite : '回复管理',
             },
         ]
     },

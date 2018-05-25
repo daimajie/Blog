@@ -1,6 +1,7 @@
 <?php
 namespace app\components;
 use Yii;
+use yii\helpers\Url;
 
 class Helper
 {
@@ -86,6 +87,51 @@ class Helper
         }
 
         return $data;
+    }
+
+    //截取多字节字符串
+    public static function truncate_utf8_string($string, $length, $etc = '...')
+    {
+        $result = '';
+        $string = html_entity_decode(trim(strip_tags($string)), ENT_QUOTES, 'UTF-8');
+        $strlen = strlen($string);
+        for ($i = 0; (($i < $strlen) && ($length > 0)); $i++)
+        {
+            if ($number = strpos(str_pad(decbin(ord(substr($string, $i, 1))), 8, '0', STR_PAD_LEFT), '0'))
+            {
+                if ($length < 1.0)
+                {
+                    break;
+                }
+                $result .= substr($string, $i, $number);
+                $length -= 1.0;
+                $i += $number - 1;
+            }
+            else
+            {
+                $result .= substr($string, $i, 1);
+                $length -= 0.5;
+            }
+        }
+        $result = htmlspecialchars($result, ENT_QUOTES, 'UTF-8');
+        if ($i < $strlen)
+        {
+            $result .= $etc;
+        }
+        return $result;
+    }
+
+    //设置子导航
+    public static function setSubNav($data){
+        $tmp = [];
+        foreach($data as $key => $val){
+            $tmp[$key]['label'] = $val['name'];
+            $tmp[$key]['url'] = Url::to(['/category/detail', 'category_id'=>$val['id']]);
+        }
+        $tmp['last']['label'] = '更多...';
+        $tmp['last']['url'] = Url::to(['/category/index']);
+
+        return $tmp;
     }
 
 
