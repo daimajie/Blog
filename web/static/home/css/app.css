@@ -103,6 +103,7 @@
 .crossfade .user-info img{
 	border-radius: 50px;
 	border:1px solid #efefef;
+	width: 100%;
 }
 .crossfade .user-info .user-name{
 	font-size: 22px;

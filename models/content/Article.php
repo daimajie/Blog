@@ -3,11 +3,13 @@
 namespace app\models\content;
 
 use app\components\Helper;
+use app\components\View;
 use app\models\member\User;
 use yii\data\Pagination;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
+use Yii;
 
 /**
  * This is the model class for table "{{%article}}".
@@ -169,6 +171,12 @@ class Article extends \yii\db\ActiveRecord
             ->orderBy(['created_at' => SORT_DESC,'id' => SORT_DESC])
             ->asArray()
             ->all();
+
+        foreach($data as $key => &$val){
+            $val['created_at'] = View::timeFormat($val['created_at']);
+            $val['article_url'] = Url::to(['article/index','article_id'=>$val['id']]);
+            $val['topic']['topic_url'] = Url::to(['topic/index','topic_id' => $val['topic']['id']]);
+        }
 
         return $data;
 

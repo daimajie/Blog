@@ -5,6 +5,8 @@ use yii\behaviors\TimestampBehavior;
 use Yii;
 use yii\data\Pagination;
 use yii\web\BadRequestHttpException;
+use app\components\View;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%topic}}".
@@ -131,12 +133,17 @@ class Topic extends \yii\db\ActiveRecord
 
         //获取数据
         $articles = $query->with('user')->with('topic')
-            ->select(['article.*','from_unixtime(created_at) as created_at'])
+            ->select(['article.*'])
             ->offset($pagiantion->offset)
             ->limit($pagiantion->limit)
             ->orderBy(['created_at'=>SORT_DESC, 'id'=>SORT_DESC])
             ->asArray()
             ->all();
+        foreach($articles as $key => &$val){
+            $val['created_at'] = View::timeFormat($val['created_at']);
+            $val['article_url'] = Url::to(['article/index','article_id'=>$val['id']]);
+            //$val['topic']['topic_url'] = Url::to(['topic/index','topic_id' => $val['topic']['id']]);
+        }
 
         return $articles;
 

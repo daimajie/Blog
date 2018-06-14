@@ -16,7 +16,7 @@ class m180514_082928_create_user_table extends Migration
         $this->createTable(self::TABLE_NAME, [
             'id' => $this->primaryKey()->unsigned()->notNull()->comment('ID'),
             'username' => $this->string(15)->notNull()->unique()->comment('用户名'),
-            'auth_key' => $this->string(32)->notNull()->comment('auth_key'),
+            'auth_key' => $this->string(32)->notNull()->defaultValue('')->comment('auth_key'),
             'password_hash' => $this->string()->notNull()->comment('密码'),
             'password_reset_token' => $this->string()->unique()->comment('密码重置token'),
             'email' => $this->string()->notNull()->unique()->comment('email'),

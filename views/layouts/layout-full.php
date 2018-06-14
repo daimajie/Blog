@@ -48,11 +48,19 @@ LayuiAsset::register($this);
                         ['label' => '分类', 'url' => ['/category/index']],
                         [
                             'label' => Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username,
-                            'url' => ['/member/center'],
+                            'url' => null,
                             'items' => [
                                 [
                                     'label' => '个人中心',
-                                    'url' => ['/member/center'],
+                                    'url' => ['/member/index'],
+                                    'options' => [
+                                        'tag' => 'dd',
+                                        'class' => ''
+                                    ],
+                                ],
+                                [
+                                    'label' => '写文章',
+                                    'url' => ['/admin'],
                                     'options' => [
                                         'tag' => 'dd',
                                         'class' => ''
@@ -78,20 +86,24 @@ LayuiAsset::register($this);
         </div>
     </div>
     <div class="bg">
+
         <div class="banner crossfade">
+            <?php if(!empty($this->params['star'])):?>
             <div class="user-info">
                 <div class="photo">
-                    <img src="/static/home/img/photo.jpg" alt="">
+                    <img src="<?= $this->params['star']['photo']?>" alt="">
                 </div>
                 <div class="brief">
                     <p class="user-name">
-                        冰冰棒 | 范爷
-                        <span class="layui-badge layui-inline"><i class="layui-icon">&#xe62c;</i>   6172+</span>
+                       今日之星 | <?= $this->params['star']['username']?>
+                        <span class="layui-badge layui-inline"><i class="layui-icon">&#xe62c;</i>   <?= $this->params['star']['total']?>+</span>
                     </p>
-                    <p class="font-16">签名： 梦想是陪我睡觉的东西，不实现它我会失眠。</p>
+                    <p class="font-16">签名： 庆幸，向左或向右，我都没有迷失方向っ  ||  还好，向前或向后，我都如愿找到了你っ。</p>
                 </div>
             </div>
+            <?php endif;?>
         </div>
+
     </div>
     <div class="sub">
         <div class="">

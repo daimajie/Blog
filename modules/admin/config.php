@@ -29,4 +29,5 @@ return [
     'params' => [
         // list of parameters
     ],
+    'defaultRoute' => 'index/index',
 ];

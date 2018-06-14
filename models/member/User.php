@@ -73,7 +73,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @return bool
      * @throws \yii\base\Exception
      */
-    public function beforeSave($insert)
+    /*public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
@@ -82,7 +82,7 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         }
         return false;
-    }
+    }*/
 
 
     /**

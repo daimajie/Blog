@@ -48,11 +48,19 @@ LayuiAsset::register($this);
                         ['label' => '分类', 'url' => ['/category/index']],
                         [
                             'label' => Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username,
-                            'url' => ['/member/center'],
+                            'url' => null,
                             'items' => [
                                 [
                                     'label' => '个人中心',
-                                    'url' => ['/member/center'],
+                                    'url' => ['/member/index'],
+                                    'options' => [
+                                        'tag' => 'dd',
+                                        'class' => ''
+                                    ],
+                                ],
+                                [
+                                    'label' => '写文章',
+                                    'url' => ['/admin'],
                                     'options' => [
                                         'tag' => 'dd',
                                         'class' => ''

@@ -2,6 +2,7 @@
 namespace app\controllers;
 use app\components\Helper;
 use app\models\content\Category;
+use app\models\member\User;
 use app\models\setting\Metas;
 use yii\caching\DbDependency;
 use yii\helpers\VarDumper;
@@ -39,6 +40,26 @@ class BaseController extends Controller
                 $cache->set('metas',$metas,3600);
             }
             $this->view->params['metas'] = $metas;
+
+
+            //获取站点之星
+            $star = $cache->get('star');
+            if($star === false){
+                $star = User::find()
+                    ->select(['id','photo','username','total'])
+                    ->where(['author'=>1])
+                    ->orderBy(['total'=>SORT_DESC])
+                    ->limit(1)
+                    ->one();
+                if(!empty($star)){
+                    $star->photo = Yii::$app->params['pics'][$star->photo];
+                    $cache->set('star',$star,3600);
+                }
+
+            }
+
+            $this->view->params['star'] = $star;
+
 
 
             return true;

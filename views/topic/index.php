@@ -106,12 +106,14 @@ $this->registerJs($strJs);
             </div>
         </div>
         <div class="conmid">
-            <p class="font-16 font-bold margin-b-10"><a href="#">{{ item.title }}</a></p>
+            <p class="font-16 font-bold margin-b-10"><a href="{{ item.article_url }}">{{ item.title }}</a></p>
             <p class="margin-b-10">{{ item.brief }}</p>
         </div>
         <div class="conlow layui-clear">
                 <span class="float-l">
-                    <span class="layui-badge-rim" style="color: #FF5722;border-color: #FF5722;">{{ item.topic.name }}</span>
+                    <a href="javascript:;">
+                        <span class="layui-badge-rim" style="color: #FF5722;border-color: #FF5722;">{{ item.topic.name }}</span>
+                    </a>
                 </span>
             <span class="float-r layui-word-aux">
                     <i class="fa fa-comment-o" aria-hidden="true"></i>

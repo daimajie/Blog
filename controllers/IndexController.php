@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 use app\models\content\Article;
+use app\models\friend\Friend;
 use app\models\member\LoginForm;
 use app\models\member\PasswordResetRequestForm;
 use yii\base\Exception;
@@ -60,7 +61,13 @@ class IndexController extends BaseController
     public function actionIndex(){
         $this->layout = 'layout-full';
 
-        return $this->render('index',['pageSize'=>Yii::$app->params['pageSize']]);
+        //友情链接
+        $friend = Friend::find()->orderBy(['sort'=>SORT_ASC])->limit(50)->asArray()->all();
+
+        return $this->render('index',[
+            'pageSize'=>Yii::$app->params['pageSize'],
+            'friend' => $friend,
+        ]);
     }
 
     //ajax获取首页文章列表

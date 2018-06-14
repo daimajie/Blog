@@ -29,7 +29,7 @@ class Friend extends \yii\db\ActiveRecord
     {
         return [
             [['name','url'], 'required'],
-            [['sort'], 'in', 'range' => [1, 2, 3]],
+            [['sort'], 'integer'],
             [['sort'], 'default', 'value'=>50],
             [['name'], 'string', 'max' => 32],
             [['name'], 'unique'],

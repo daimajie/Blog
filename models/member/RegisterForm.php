@@ -66,7 +66,10 @@ class RegisterForm extends User
     public function store(){
         if(!$this->validate())
             return false;
+
         $this->generatePasswordHash($this->password);
+        $this->generateAuthKey();
+
         return $this->save(false);
     }
 
